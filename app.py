@@ -35,14 +35,38 @@ def login():
     cursor = conn.cursor()
 
     cursor.execute(
-        "INSERT INTO users (username, password) VALUES (?, ?)",
-        (username, password)
+        f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
+    )
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if user:
+        return "Login Successful!"
+    else:
+        return "Login Failed!"
+
+@app.route('/register')
+def register_page():
+    return render_template('register.html')
+
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    password = request.form['password']
+
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+
+    cursor.execute(
+        f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')"
     )
 
     conn.commit()
     conn.close()
 
-    return f"Stored: {username} and {password}"
+    return "Registered Successfully!"
 
 # ----------- RUN APP -----------
 
