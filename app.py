@@ -38,12 +38,12 @@ def login():
         f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
     )
 
-    user = cursor.fetchone()
+    user = cursor.fetchall()
 
     conn.close()
 
     if user:
-        return "Login Successful!"
+        return str(user)
     else:
         return "Login Failed!"
 
